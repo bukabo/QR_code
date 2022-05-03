@@ -1,6 +1,7 @@
 from PIL import Image
 import pyqrcode
 import cv2
+from gradient import gradien_img
 
 
 def qr_generator(text, logo=None):
@@ -10,15 +11,17 @@ def qr_generator(text, logo=None):
     :param text: текст для преобразования в QR-код
     :param logo: путь к логотипу
     """
-    # url = pyqrcode.QRCode('http://www.eqxiu.com', error='H')
-    url = pyqrcode.create(text, error='H')
-    url.png('test.png', scale=20,
-            # module_color=[250, 128, 0, 0],
-            # background=[0xcf, 0xbf, 0xcf],
+    url = pyqrcode.create(text, error='H', version=2)
+    url.png('qr.png', scale=20,
+            module_color=[50, 28, 150, 0],
+            background=[255, 255, 255, 255],
             quiet_zone=2)
+    im = Image.open('qr.png')
+    im = im.convert("RGBA")
+    im.save('qr.png')
 
     if logo:
-        im = Image.open('test.png')
+        im = Image.open('qr.png')
         width, height = im.size
         logo_size = 150
         im = im.convert("RGBA")
@@ -27,7 +30,7 @@ def qr_generator(text, logo=None):
         xmax = ymax = int((width / 2) + (logo_size / 2))
         logo = logo.resize((xmax - xmin, ymax - ymin))
         im.paste(logo, (xmin, ymin, xmax, ymax), logo)
-        im.save('test.png')
+        im.save('qr_logo.png')
 
 
 def qr_read_data(qr_code_file):
@@ -38,8 +41,10 @@ def qr_read_data(qr_code_file):
 
 
 if __name__ == '__main__':
-    logo = 'manchester_united_PNG26.png'
     text = 'simple text'
+    logo = 'manchester_united_PNG26.png'
+    # logo = 'logo.png'
     qr_generator(text, logo=logo)
-    data = qr_read_data("test.png")
+    gradien_img("qr_logo.png")
+    data = qr_read_data("qr_logo_grad.png")
     print(data)
