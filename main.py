@@ -30,8 +30,8 @@ def qr_generator(text, logo=None):
         im.save('test.png')
 
 
-def qr_read_data():
-    img = cv2.imread("test.png")
+def qr_read_data(qr_code_file):
+    img = cv2.imread(qr_code_file)
     detector = cv2.QRCodeDetector()
     data, bbox, straight_qrcode = detector.detectAndDecode(img)
     return data
@@ -41,5 +41,5 @@ if __name__ == '__main__':
     logo = 'manchester_united_PNG26.png'
     text = 'simple text'
     qr_generator(text, logo=logo)
-    data = qr_read_data()
+    data = qr_read_data("test.png")
     print(data)
